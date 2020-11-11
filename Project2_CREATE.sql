@@ -74,11 +74,11 @@ CREATE TABLE SKILL(
  SkillID Int NOT NULL,
  SkillCode char(3) NOT NULL,
  SkillClassification varchar(25) NOT NULL,
- BasicHourlyRate Int NOT NULL,
- Fringe Int NOT NULL,
+ BasicHourlyRate FLOAT NOT NULL, -- TODO: Check type for decimals
+ Fringe FLOAT NOT NULL, -- TODO: Check type for decimals
  CONSTRAINT SKILL_PK PRIMARY KEY(SkillID),
- CONSTRAINT SKILL_CODE_TYPE CHECK(SkillCode IN ('LAB','MAS', 'EQP')),
- CONSTRAINT SKILL_CLASSIFICATION_TYPE CHECK(SkillCode IN ('Labor','Masonry', 'Equipment Operation'))
+ CONSTRAINT SKILL_CODE_TYPE CHECK(SkillCode IN ('LAB','MAS', 'EQP', 'GL')),
+ CONSTRAINT SKILL_CLASSIFICATION_TYPE CHECK(SkillClassification IN ('Labor','Masonry', 'Equipment Operation', 'General Labor'))
 );
 
 CREATE SEQUENCE seqSKID INCREMENT BY 1 START WITH 1;
@@ -94,25 +94,26 @@ CREATE TABLE EMPLOYEE(
  State Char(2) NOT NULL,
  ZIP Char(10) NOT NULL,
  Phone Char(12) NOT NULL,
- Gender CHAR(2) NOT NULL,
+ Gender CHAR(5) NOT NULL,
  MaritalStatus VarChar(7) NOT NULL,
  DOB Date NOT NULL,
- EEOTYPE VarChar(34) NOT NULL,
- CONSTRAINT EEOTYPE_CHECK  CHECK (EEOTYPE IN('Black not of Hispanic Origin', 'Hispanic', 'Asian/Pacific Islander', 'American Indian Or Alaskan Native', 'Non-Minority (White)')),
- CONSTRAINT MARITALSTATUS_CHECK CHECK (MaritalStatus IN('Single', 'Married')),
- CONSTRAINT GENDER_CHECK CHECK (MaritalStatus IN('male', 'female')),
+ EEOTYPE Int NOT NULL,
+ CONSTRAINT EEOTYPE_CHECK  CHECK (EEOTYPE IN(1, 2, 3, 4, 5)),
+ CONSTRAINT MARITALSTATUS_CHECK CHECK (MaritalStatus IN('Single', 'Married')), -- TODO: Use LIKE, Regex
+ CONSTRAINT GENDER_CHECK CHECK (Gender IN('male', 'female')), -- TODO: Use LIKE, Regex
  CONSTRAINT EMPLOYEE_PK PRIMARY KEY(EmployeeID)
 );
 
 CREATE SEQUENCE seqEID INCREMENT BY 1 START WITH 1;
 
 CREATE TABLE TIME_CARD(
+ TimeCardId Int NOT NULL,
  SkillID Int NOT NULL,
  EmployeeID Int NOT NULL,
  ProjectID Int NOT NULL,
  TimeCardDate Date NOT NULL,
  Hours Int NOT NULL,
- CONSTRAINT TIME_CARD_PK PRIMARY KEY (SkillID, EmployeeID, ProjectID),
+ CONSTRAINT TIME_CARD_PK PRIMARY KEY (TimeCardId),
  CONSTRAINT SKILL_ID_FK FOREIGN KEY (SkillID) REFERENCES SKILL(SkillID),
  CONSTRAINT EMPLOYEE_ID_FK FOREIGN KEY (EmployeeID) REFERENCES EMPLOYEE(EmployeeID),
  CONSTRAINT PROJECT_NUMBER_FK FOREIGN KEY (ProjectID) REFERENCES PROJECT(ProjectID),
