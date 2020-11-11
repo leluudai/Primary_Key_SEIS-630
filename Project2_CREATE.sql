@@ -49,7 +49,7 @@ CREATE TABLE TOOL(
  ToolID Int NOT NULL,
  ToolName	VarChar(25) NOT NULL,
  ToolType char(5) NULL,
- CONSTRAINT TOOLTYPE_CHECK CHECK (ToolType IN('hand', 'power')),
+ CONSTRAINT TOOLTYPE_CHECK CHECK (ToolType IN('hand', 'power')), -- TODO: LIKE, Regex
  CONSTRAINT TOOL_PK PRIMARY KEY(ToolID)
 );
 
