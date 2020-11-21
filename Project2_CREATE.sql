@@ -113,6 +113,7 @@ CREATE TABLE TIME_CARD(
  ProjectID Int NOT NULL,
  StartTime Date NOT NULL,
  EndTime Date NOT NULL,
+ TotalTime Number AS (TO_NUMBER(TO_CHAR(ENDTIME,'HH24')) - TO_NUMBER(TO_CHAR(STARTTIME,'HH24'))),
  CONSTRAINT TIME_CARD_PK PRIMARY KEY (TimeCardId),
  CONSTRAINT SKILL_ID_FK FOREIGN KEY (SkillID) REFERENCES SKILL(SkillID),
  CONSTRAINT EMPLOYEE_ID_FK FOREIGN KEY (EmployeeID) REFERENCES EMPLOYEE(EmployeeID),
@@ -120,6 +121,10 @@ CREATE TABLE TIME_CARD(
  --CONSTRAINT WEEKDAY_STARTTIME_CONSTRAINT CHECK(to_char(StartTime,'D') != '1' AND to_char(StartTime,'D') != '7'),
  --CONSTRAINT WEEKDAY_ENDTIME_CONSTRAINT CHECK(to_char(EndTime,'D') != '1' AND to_char(EndTime,'D') != '7') -- TODO: Add constraint for EndTime not < StartTime
 );
+
+-- To Be removed only use for table that's already exist without this column.
+ALTER TABLE TIME_CARD
+MODIFY TotalTime Number AS (TO_NUMBER(TO_CHAR(ENDTIME,'HH24')) - TO_NUMBER(TO_CHAR(STARTTIME,'HH24')));
 
 CREATE TABLE CONTRACTOR(
  ContractorNumber Int NOT NULL,
