@@ -94,7 +94,7 @@ CREATE TABLE EMPLOYEE(
  State Char(2) NOT NULL,
  ZIP Char(10) NOT NULL,
  Phone Char(12) NOT NULL,
- Gender CHAR(6) NOT NULL,
+ Gender CHAR(7) NOT NULL,
  MaritalStatus VarChar(7) NOT NULL,
  DOB Date NOT NULL,
  EEOTYPE Int NOT NULL,
