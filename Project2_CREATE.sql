@@ -1,5 +1,3 @@
--- TODO: Update Contraint Names with Table prefix.
-
 CREATE TABLE SUPPLIER(
  SupplierID Int NOT NULL,
  Phone	Char(12) NOT NULL,
@@ -34,7 +32,7 @@ CREATE  TABLE SUPPLIER_LINE_ITEM(
 CREATE TABLE VEHICLE(
  VehicleID Int NOT NULL,
  VIN Char(17) NOT NULL,
- LicensePlate VarChar(7) NOT NULL, -- TODO: CHECK constraint for hypens?
+ LicensePlate VarChar(7) NOT NULL,
  IsRental NUMBER(1) DEFAULT 0,
  Year Numeric(4) NOT NULL,
  NeedsRepair NUMBER(1) DEFAULT 0,
@@ -49,7 +47,7 @@ CREATE TABLE TOOL(
  ToolID Int NOT NULL,
  ToolName	VarChar(25) NOT NULL,
  ToolType char(5) NULL,
- CONSTRAINT TOOLTYPE_CHECK CHECK (ToolType IN('hand', 'power')), -- TODO: LIKE, Regex
+ CONSTRAINT TOOLTYPE_CHECK CHECK (ToolType IN('hand', 'power')),
  CONSTRAINT TOOL_PK PRIMARY KEY(ToolID)
 );
 
@@ -74,8 +72,8 @@ CREATE TABLE SKILL(
  SkillID Int NOT NULL,
  SkillCode char(3) NOT NULL,
  SkillClassification varchar(25) NOT NULL,
- BasicHourlyRate FLOAT NOT NULL, -- TODO: Check type for decimals
- Fringe FLOAT NOT NULL, -- TODO: Check type for decimals
+ BasicHourlyRate FLOAT NOT NULL,
+ Fringe FLOAT NOT NULL,
  CONSTRAINT SKILL_PK PRIMARY KEY(SkillID),
  CONSTRAINT SKILL_CODE_TYPE CHECK(SkillCode IN ('LAB','MAS', 'EQP', 'GL')),
  CONSTRAINT SKILL_CLASSIFICATION_TYPE CHECK(SkillClassification IN ('Labor','Masonry', 'Equipment Operation', 'General Labor'))
@@ -85,7 +83,7 @@ CREATE SEQUENCE seqSKID INCREMENT BY 1 START WITH 1;
 
 CREATE TABLE EMPLOYEE(
  EmployeeID Int NOT NULL,
- SSN Char(11) NOT NULL, -- TODO: CHECK constraint for hypens?
+ SSN Char(11) NOT NULL,
  LastName VarChar(25) NOT NULL,
  FirstName VarChar(25) NOT NULL,
  MI Char(2) NOT NULL,
@@ -99,8 +97,8 @@ CREATE TABLE EMPLOYEE(
  DOB Date NOT NULL,
  EEOTYPE Int NOT NULL,
  CONSTRAINT EEOTYPE_CHECK  CHECK (EEOTYPE IN(1, 2, 3, 4, 5)),
- CONSTRAINT MARITALSTATUS_CHECK CHECK (MaritalStatus IN('Single', 'Married')), -- TODO: Use LIKE, Regex
- CONSTRAINT GENDER_CHECK CHECK (Gender IN('male', 'female')), -- TODO: Use LIKE, Regex
+ CONSTRAINT MARITALSTATUS_CHECK CHECK (MaritalStatus IN('Single', 'Married')),
+ CONSTRAINT GENDER_CHECK CHECK (Gender IN('male', 'female')),
  CONSTRAINT EMPLOYEE_PK PRIMARY KEY(EmployeeID)
 );
 
@@ -118,13 +116,7 @@ CREATE TABLE TIME_CARD(
  CONSTRAINT SKILL_ID_FK FOREIGN KEY (SkillID) REFERENCES SKILL(SkillID),
  CONSTRAINT EMPLOYEE_ID_FK FOREIGN KEY (EmployeeID) REFERENCES EMPLOYEE(EmployeeID),
  CONSTRAINT PROJECT_NUMBER_FK FOREIGN KEY (ProjectID) REFERENCES PROJECT(ProjectID)
- --CONSTRAINT WEEKDAY_STARTTIME_CONSTRAINT CHECK(to_char(StartTime,'D') != '1' AND to_char(StartTime,'D') != '7'),
- --CONSTRAINT WEEKDAY_ENDTIME_CONSTRAINT CHECK(to_char(EndTime,'D') != '1' AND to_char(EndTime,'D') != '7') -- TODO: Add constraint for EndTime not < StartTime
 );
-
--- To Be removed only use for table that's already exist without this column.
-ALTER TABLE TIME_CARD
-MODIFY TotalTime Number AS (TO_NUMBER(TO_CHAR(ENDTIME,'HH24')) - TO_NUMBER(TO_CHAR(STARTTIME,'HH24')));
 
 CREATE TABLE CONTRACTOR(
  ContractorNumber Int NOT NULL,
