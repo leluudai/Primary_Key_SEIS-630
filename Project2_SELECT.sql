@@ -2,9 +2,9 @@
 /* Part C of Exhibit B (Ask professor about looking up contract associated with project) */
 SELECT PROJECTNUMBER, PROJECTADDRESS, PROJECTDESCRIPTION FROM PROJECT Where PROJECTNUMBER = 'IL-SJB-335-005';
 
-/* EXHIBIT B-LILY LANDSCAPING’S EEOC COMPLIANCE STATEMENT FORM Part D */
+/* Part D EXHIBIT B-LILY LANDSCAPING’S EEOC COMPLIANCE STATEMENT FORM */
 
--- BASED ON ONE WEEK
+---------------This is create view section for part B --------------
 CREATE VIEW MINORITIES AS SELECT * FROM EMPLOYEE
 WHERE GENDER = 'male' AND EEOTYPE != 5 OR
       Gender = 'female' AND EEOTYPE != 5;
@@ -48,14 +48,6 @@ JOIN NON_MINORITY_MALE_HOURS NMMH on NMFH.SKILLCODE = NMMH.SKILLCODE
 JOIN MINORITY_MALE_HOURS MMH on NMFH.SKILLCODE = MMH.SKILLCODE
 JOIN MINORITY_FEMALE_HOURS MFH on MMH.SKILLCODE = MFH.SKILLCODE;
 
-----------------------------------------This Query for display whole entire table except Skill Classification Column
-select MINORITY_MALE, MINORITY_FEMALE, NON_MINORITY_MALE, NON_MINORITY_FEMALE, Job_Hours, Percent_Minority, Percent_Female from DETAIL_WORK_HOUR_BREAK_DOWN union
-select  SUM(MINORITY_MALE) as Minority_Male, SUM(MINORITY_FEMALE) as Minority_Female, SUM(NON_MINORITY_MALE) as Non_Minority_Male, SUM(NON_MINORITY_FEMALE) as Non_Minority_Female, SUM(Job_Hours) Total_Job_Hours,
-       ROUND(((SUM(MINORITY_MALE) + SUM(MINORITY_FEMALE)) /  SUM(Job_Hours) * 100), 1) as Total_Percent_Minority,
-       ROUND(((SUM(NON_MINORITY_FEMALE) + SUM(MINORITY_FEMALE)) /  SUM(Job_Hours) * 100), 1) as Total_Female_Percent
-from DETAIL_WORK_HOUR_BREAK_DOWN;
-
----------------------------------------- Create view query
 create view Detail_Work_Hour_Break_Down as select MINORITY_MALE_HOURS.SKILLCODE, MINORITY_MALE_HOURS.SKILLCLASSIFICATION, MINORITY_MALE, MINORITY_FEMALE, NON_MINORITY_FEMALE, NON_MINORITY_MALE,
        (NVL(MINORITY_MALE, 0) + NVL(MINORITY_FEMALE, 0) + NVL(NON_MINORITY_MALE, 0)+ NVL(NON_MINORITY_FEMALE, 0)) as Job_Hours,
        ROUND((NVL(MINORITY_MALE, 0) + NVL(MINORITY_FEMALE, 0)) /  (NVL(MINORITY_MALE, 0) + NVL(MINORITY_FEMALE, 0) + NVL(NON_MINORITY_MALE, 0)+ NVL(NON_MINORITY_FEMALE, 0)) * 100 ,1)  as Percent_Minority,
@@ -74,6 +66,15 @@ from MINORITY_MALE_HOURS
     left outer join  NON_MINORITY_MALE_HOURS NMMH on MINORITY_MALE_HOURS.SKILLCLASSIFICATION = NMMH.SKILLCLASSIFICATION
     left outer join  MINORITY_FEMALE_HOURS MFH on MINORITY_MALE_HOURS.SKILLCLASSIFICATION = MFH.SKILLCLASSIFICATION
     left outer join  NON_MINORITY_FEMALE_HOURS NMFH on MFH.SKILLCLASSIFICATION = NMFH.SKILLCLASSIFICATION;
+
+------------------------------------ End create view section for Part B ------------------------------
+
+----------------------------------------This Query for display whole entire table except Skill Classification Column
+select MINORITY_MALE, MINORITY_FEMALE, NON_MINORITY_MALE, NON_MINORITY_FEMALE, Job_Hours, Percent_Minority, Percent_Female from DETAIL_WORK_HOUR_BREAK_DOWN union
+select  SUM(MINORITY_MALE) as Minority_Male, SUM(MINORITY_FEMALE) as Minority_Female, SUM(NON_MINORITY_MALE) as Non_Minority_Male, SUM(NON_MINORITY_FEMALE) as Non_Minority_Female, SUM(Job_Hours) Total_Job_Hours,
+       ROUND(((SUM(MINORITY_MALE) + SUM(MINORITY_FEMALE)) /  SUM(Job_Hours) * 100), 1) as Total_Percent_Minority,
+       ROUND(((SUM(NON_MINORITY_FEMALE) + SUM(MINORITY_FEMALE)) /  SUM(Job_Hours) * 100), 1) as Total_Female_Percent
+from DETAIL_WORK_HOUR_BREAK_DOWN;
 
 --------------------------- END OF SECTION B-----------------------------------------------
 
@@ -162,7 +163,7 @@ SELECT PROJECTID, EMPLOYEEID, SKILLID, TOTALTIME,
                       ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS Accumulate_Total_Hours
 FROM TIME_CARD where EMPLOYEEID = 1;
 
--- Query return data for single employee with Total_Hours break fown by Project Name and Skill Code.
+-- Query return data for single employee = 1 with Total_Hours break down by Project Name and Skill Code.
 SELECT PROJECTNAME, SKILLCODE, BASICHOURLYRATE, FRINGE, BASICHOURLYRATE + FRINGE AS TOTAL, SUM((ENDTIME-STARTTIME)*24) AS HOURS, (BASICHOURLYRATE + FRINGE) * SUM((ENDTIME-STARTTIME)*24) AS GROSSPAY
 FROM EMPLOYEE
 JOIN TIME_CARD ON EMPLOYEE.EMPLOYEEID = TIME_CARD.EMPLOYEEID
@@ -175,7 +176,6 @@ CREATE VIEW DETAIL_WORK_HOUR  AS Select TIMECARDID, SKILLID, EMPLOYEEID, PROJECT
     AS START_HOUR, TO_NUMBER(TO_CHAR(ENDTIME,'HH24')) AS END_HOUR, TOTALTIME,
     SUM(TOTALTIME) OVER (PARTITION BY EMPLOYEEID ORDER BY TOTALTIME ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS Total_Hours
 FROM TIME_CARD ORDER BY TIMECARDID;
-
 
 --Find total hours for single employee worked
 SELECT SUM(SUM(ENDTIME-STARTTIME)*24) AS HOURS
