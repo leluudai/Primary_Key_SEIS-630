@@ -4,7 +4,7 @@ CREATE TABLE SUPPLIER
 (
     SupplierID      Int         NOT NULL,
     Phone           Char(12)    NOT NULL,
-    SupplierAddress VarChar(25) NULL,
+    SupplierAddress VarChar(100) NULL,
     SupplierName    VarChar(25) NULL,
     SupplierState   Char(2)     NULL,
     SupplierCity    VarChar(20) NULL,
@@ -65,7 +65,7 @@ CREATE TABLE PROJECT
     ProjectID          Int          NOT NULL,
     ProjectNumber      VarChar(14)  NOT NULL UNIQUE,
     ProjectName        VarChar(25)  NOT NULL,
-    ProjectAddress     VarChar(25)  NOT NULL,
+    ProjectAddress     VarChar(100)  NOT NULL,
     ProjectDescription Varchar(150) NOT NULL,
     VehicleID          Int          NOT NULL,
     ToolID             Int          NOT NULL,
@@ -130,13 +130,15 @@ CREATE TABLE TIME_CARD
     CONSTRAINT PROJECT_NUMBER_FK FOREIGN KEY (ProjectID) REFERENCES PROJECT (ProjectID)
 );
 
+CREATE SEQUENCE seqTCID INCREMENT BY 1 START WITH 1;
+
 CREATE TABLE CONTRACTOR
 (
     ContractorNumber  Int         NOT NULL,
     SupplierID        Int         NOT NULL,
     ProjectID         Int         NOT NULL,
     ContractorName    VarChar(25) NULL,
-    ContractorAddress VarChar(25) NULL,
+    ContractorAddress VarChar(100) NULL,
     CONSTRAINT CONTRACTOR_SUPPLIER_ID_FK FOREIGN KEY (SupplierID) REFERENCES SUPPLIER (SupplierID),
     CONSTRAINT CONTRACTOR_PROJECT_NUMBER_FK FOREIGN KEY (ProjectID) REFERENCES PROJECT (ProjectID)
 );
