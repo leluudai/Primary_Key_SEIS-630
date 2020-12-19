@@ -134,11 +134,12 @@ CREATE SEQUENCE seqTCID INCREMENT BY 1 START WITH 1;
 
 CREATE TABLE CONTRACTOR
 (
-    ContractorNumber  Int         NOT NULL,
+    ContractorId  Int         NOT NULL,
     SupplierID        Int         NOT NULL,
     ProjectID         Int         NOT NULL,
     ContractorName    VarChar(25) NULL,
     ContractorAddress VarChar(100) NULL,
+    CONSTRAINT CONTRACTOR_PK PRIMARY KEY (ContractorId),
     CONSTRAINT CONTRACTOR_SUPPLIER_ID_FK FOREIGN KEY (SupplierID) REFERENCES SUPPLIER (SupplierID),
     CONSTRAINT CONTRACTOR_PROJECT_NUMBER_FK FOREIGN KEY (ProjectID) REFERENCES PROJECT (ProjectID)
 );
